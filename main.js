@@ -71,8 +71,17 @@ let sockets = [];
 let MessageType = {
     QUERY_LATEST: 0,
     QUERY_ALL: 1,
-    RESPONSE_BLOCKCHAIN: 2
+    RESPONSE_BLOCKCHAIN: 2,
 };
+
+let Economics = {
+  BLOCK_SIZE_MAX: 1000,
+  BLOCK_TIME_INTERVAL: 1000,
+  TOTAL_COINS: 2100000000,
+  COINBASE_PER_BLOCK: 50,
+  INFLATION_MULTIPLIER: 0.5,
+  INFLATION_BLOCK_LENGTH: 240000,
+}
 
 let getGenesisBlock = () => {
     return new Block(0, "0", 1465154705, "let there be light.", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
