@@ -18,6 +18,55 @@ class Block {
     }
 }
 
+/**
+* @summary 256 bit public & private key
+*/
+class Address {
+  constructor() {
+    this.privateKey = hexString(256);
+    this.publicKey = '';
+  }
+
+  hexString (length) {
+    let ret = '';
+    while (ret.length < length) {
+      ret += Math.random().toString(16).substring(2);
+    }
+    return ret.substring(0, length);
+  }
+}
+
+/**
+* @summary address collection to send and receive funds
+*/
+class Wallet {
+  constructor () {
+    this.index = [];
+
+    //first Address
+    this.index.push(createAddress());
+  }
+
+  createAddress () {
+    return new Address ();
+  }
+}
+
+/**
+* @summary an operation sending funds from source to target
+*/
+class Transaction () {
+  constructor (input, output, coins) {
+    this.input = input;
+    this.output = output;
+    this.coins = coins;
+  }
+
+  verify () {
+
+  }
+}
+
 let sockets = [];
 let MessageType = {
     QUERY_LATEST: 0,
