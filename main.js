@@ -1,5 +1,5 @@
 'use strict';
-const CryptoJS = require("crypto-js");
+const crypto = require("crypto-js");
 const express = require("express");
 const bodyParser = require('body-parser');
 const WebSocket = require("ws");
@@ -19,18 +19,28 @@ class Block {
 }
 
 /**
+* @summary randomness
+*/
+class Entropy {
+  constructor() {
+    return Math.random();
+  }
+}
+
+
+/**
 * @summary 256 bit public & private key
 */
 class Address {
   constructor() {
-    this.privateKey = hexString(256);
+    this.privateKey = this._hexString(256);
     this.publicKey = '';
   }
 
-  hexString (length) {
+  _hexString (length) {
     let ret = '';
     while (ret.length < length) {
-      ret += Math.random().toString(16).substring(2);
+      ret += new Entropy().toString(16).substring(2);
     }
     return ret.substring(0, length);
   }
@@ -44,7 +54,7 @@ class Wallet {
     this.index = [];
 
     //first Address
-    this.index.push(createAddress());
+    this.index.push(this.createAddress());
   }
 
   createAddress () {
@@ -55,7 +65,7 @@ class Wallet {
 /**
 * @summary an operation sending funds from source to target
 */
-class Transaction () {
+class Transaction {
   constructor (input, output, coins) {
     this.input = input;
     this.output = output;
@@ -83,6 +93,8 @@ let Economics = {
   INFLATION_BLOCK_LENGTH: 240000,
 }
 
+let wallet = new Wallet();
+
 let getGenesisBlock = () => {
     return new Block(0, "0", 1465154705, "let there be light.", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
 };
@@ -107,6 +119,10 @@ let initHttpServer = () => {
         connectToPeers([req.body.peer]);
         res.send();
     });
+    app.get('/wallet', (req, res) => res.send(JSON.stringify(wallet)));
+    app.get('/addAddress', (req, res) => {
+
+    })
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
 };
 
@@ -124,6 +140,10 @@ let initConnection = (ws) => {
     initErrorHandler(ws);
     write(ws, queryChainLengthMsg());
 };
+
+let initWallet = () => {
+
+}
 
 let initMessageHandler = (ws) => {
     ws.on('message', (data) => {
@@ -167,7 +187,7 @@ let calculateHashForBlock = (block) => {
 };
 
 let calculateHash = (index, previousHash, timestamp, data) => {
-    return CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+    return crypto.SHA256(index + previousHash + timestamp + data).toString();
 };
 
 let addBlock = (newBlock) => {
