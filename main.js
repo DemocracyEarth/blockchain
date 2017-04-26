@@ -1,8 +1,9 @@
 'use strict';
-const crypto = require("crypto-js");
-const express = require("express");
+const crypto = require('crypto-js');
+const express = require('express');
 const bodyParser = require('body-parser');
-const WebSocket = require("ws");
+const WebSocket = require('ws');
+const prompt = require('prompt');
 
 const http_port = process.env.HTTP_PORT || 3001;
 const p2p_port = process.env.P2P_PORT || 6001;
@@ -33,11 +34,11 @@ class Entropy {
 */
 class Address {
   constructor() {
-    this.privateKey = this._hexString(256);
+    this.privateKey = this.hexString(256);
     this.publicKey = '';
   }
 
-  _hexString (length) {
+  hexString (length) {
     let ret = '';
     while (ret.length < length) {
       ret += new Entropy().toString(16).substring(2);
