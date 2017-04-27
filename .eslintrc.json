@@ -4,5 +4,9 @@
         "react",
         "jsx-a11y",
         "import"
-    ]
+    ],
+    "rules": {
+      "max-len": ["error", 250],
+      "strict": ["error", "global"]
+    }
 }
