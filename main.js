@@ -6,9 +6,13 @@ const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const prompt = require('prompt');
 
-const http_port = process.env.HTTP_PORT || 3001;
-const p2p_port = process.env.P2P_PORT || 6001;
+const HTTP_PORT = process.env.HTTP_PORT || 3001;
+const P2P_PORT = process.env.P2P_PORT || 6001;
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
+
+const log = (message) => {
+  console.log(message);
+};
 
 class Block {
   constructor(index, previousHash, timestamp, data, hash) {
@@ -73,10 +77,6 @@ class Transaction {
     this.output = output;
     this.coins = coins;
   }
-
-  verify() {
-
-  }
 }
 
 const sockets = [];
@@ -86,7 +86,7 @@ const MessageType = {
   RESPONSE_BLOCKCHAIN: 2,
 };
 
-const Economics = {
+const economy = {
   BLOCK_SIZE_MAX: 1000,
   BLOCK_TIME_INTERVAL: 1000,
   TOTAL_COINS: 2100000000,
@@ -96,9 +96,7 @@ const Economics = {
 };
 
 const wallet = new Wallet();
-
 const getGenesisBlock = () => new Block(0, '0', 1465154705, 'let there be light.', '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7');
-
 let blockchain = [getGenesisBlock()];
 const getLatestBlock = () => blockchain[blockchain.length - 1];
 
@@ -120,14 +118,14 @@ const calculateHashForBlock = block => calculateHash(block.index, block.previous
 
 const isValidNewBlock = (newBlock, previousBlock) => {
   if (previousBlock.index + 1 !== newBlock.index) {
-    console.log('invalid index');
+    log('invalid index');
     return false;
   } else if (previousBlock.hash !== newBlock.previousHash) {
-    console.log('invalid previoushash');
+    log('invalid previoushash');
     return false;
   } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
-    console.log(`${typeof (newBlock.hash)} ${typeof calculateHashForBlock(newBlock)}`);
-    console.log(`invalid hash: ${calculateHashForBlock(newBlock)} ${newBlock.hash}`);
+    log(`${typeof (newBlock.hash)} ${typeof calculateHashForBlock(newBlock)}`);
+    log(`invalid hash: ${calculateHashForBlock(newBlock)} ${newBlock.hash}`);
     return false;
   }
   return true;
@@ -164,11 +162,11 @@ const isValidChain = (blockchainToValidate) => {
 
 const replaceChain = (newBlocks) => {
   if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
-    console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
+    log('Received blockchain is valid. Replacing current blockchain with received blockchain');
     blockchain = newBlocks;
     broadcast(responseLatestMsg());
   } else {
-    console.log('Received blockchain invalid');
+    log('Received blockchain invalid');
   }
 };
 
@@ -177,27 +175,27 @@ const handleBlockchainResponse = (message) => {
   const latestBlockReceived = receivedBlocks[receivedBlocks.length - 1];
   const latestBlockHeld = getLatestBlock();
   if (latestBlockReceived.index > latestBlockHeld.index) {
-    console.log(`blockchain possibly behind. We got: ${latestBlockHeld.index} Peer got: ${latestBlockReceived.index}`);
+    log(`blockchain possibly behind. We got: ${latestBlockHeld.index} Peer got: ${latestBlockReceived.index}`);
     if (latestBlockHeld.hash === latestBlockReceived.previousHash) {
-      console.log('We can append the received block to our chain');
+      log('We can append the received block to our chain');
       blockchain.push(latestBlockReceived);
       broadcast(responseLatestMsg());
     } else if (receivedBlocks.length === 1) {
-      console.log('We have to query the chain from our peer');
+      log('We have to query the chain from our peer');
       broadcast(queryAllMsg());
     } else {
-      console.log('Received blockchain is longer than current blockchain');
+      log('Received blockchain is longer than current blockchain');
       replaceChain(receivedBlocks);
     }
   } else {
-      console.log('received blockchain is not longer than received blockchain. Do nothing');
+    log('received blockchain is not longer than received blockchain. Do nothing');
   }
 };
 
 const initMessageHandler = (ws) => {
   ws.on('message', (data) => {
     const message = JSON.parse(data);
-    console.log(`Received message ${JSON.stringify(message)}`);
+    log(`Received message ${JSON.stringify(message)}`);
     switch (message.type) {
       case MessageType.QUERY_LATEST:
         write(ws, responseLatestMsg());
@@ -214,9 +212,9 @@ const initMessageHandler = (ws) => {
 };
 
 const initErrorHandler = (ws) => {
-  const closeConnection = (ws) => {
-    console.log(`connection failed to peer: ${ws.url}`);
-    sockets.splice(sockets.indexOf(ws), 1);
+  const closeConnection = (socket) => {
+    log(`connection failed to peer: ${ws.url}`);
+    sockets.splice(sockets.indexOf(socket), 1);
   };
   ws.on('close', () => closeConnection(ws));
   ws.on('error', () => closeConnection(ws));
@@ -230,9 +228,9 @@ const initConnection = (ws) => {
 };
 
 const initP2PServer = () => {
-  const server = new WebSocket.Server({ port: p2p_port });
+  const server = new WebSocket.Server({ port: P2P_PORT });
   server.on('connection', ws => initConnection(ws));
-  console.log('listening websocket p2p port on: ' + p2p_port);
+  log(`listening websocket p2p port on: ${P2P_PORT}`);
 };
 
 const connectToPeers = (newPeers) => {
@@ -240,11 +238,15 @@ const connectToPeers = (newPeers) => {
     const ws = new WebSocket(peer);
     ws.on('open', () => initConnection(ws));
     ws.on('error', () => {
-      console.log('connection failed');
+      log('connection failed');
     });
   });
 };
 
+const initWallet = () => {
+  // TODO: everything
+  log('init wallet');
+};
 
 const initHttpServer = () => {
   const app = express();
@@ -254,27 +256,25 @@ const initHttpServer = () => {
     const newBlock = generateNextBlock(req.body.data);
     addBlock(newBlock);
     broadcast(responseLatestMsg());
-    console.log(`block added: ${JSON.stringify(newBlock)}`);
+    log(`block added: ${JSON.stringify(newBlock)}`);
     res.send();
   });
   app.get('/peers', (req, res) => {
-    res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
+    res.send(sockets.map(s => `${s._socket.remoteAddress}:${s._socket.remotePort}`));
   });
   app.post('/addPeer', (req, res) => {
     connectToPeers([req.body.peer]);
     res.send();
   });
-  app.get('/wallet', (req, res) => res.send(JSON.stringify(wallet)));
+  app.get('/wallet', (req, res) => {
+    res.send(JSON.stringify(wallet));
+    initWallet();
+  });
   app.get('/addAddress', (req, res) => {
     // TODO: create an address
-    console.log(res);
+    log(res);
   });
-  app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
-};
-
-const initWallet = () => {
-  // TODO: everything
-  console.log('init wallet');
+  app.listen(HTTP_PORT, () => log(`Listening http on port: ${HTTP_PORT}`));
 };
 
 connectToPeers(initialPeers);
