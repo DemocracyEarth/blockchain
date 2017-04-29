@@ -1,7 +1,7 @@
 {
-  "name": "naivechain",
-  "version": "1.0.0",
-  "description": "",
+  "name": "Peer.Vote",
+  "version": "0.0.1",
+  "description": "A blockchain for democratic governance.",
   "scripts": {
     "start": "node main.js"
   },

@@ -1,3 +1,20 @@
+/**
+ ______              _   _       _
+| ___ \            | | | |     | |
+| |_/ /__  ___ _ __| | | | ___ | |_ ___
+|  __/ _ \/ _ \ '__| | | |/ _ \| __/ _ \
+| | |  __/  __/ |_ \ \_/ / (_) | ||  __/
+\_|  \___|\___|_(_) \___/ \___/ \__\___|
+
+@name PeerVote
+@description A blockchain for political economies based on votes as tokens.
+@version 0.0.1
+@author @santisiri
+@license GPL
+@package
+
+*/
+
 'use strict';
 
 const crypto = require('crypto-js');
@@ -5,6 +22,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const prompt = require('prompt');
+const colors = require("colors/safe");
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const P2P_PORT = process.env.P2P_PORT || 6001;
@@ -86,7 +104,7 @@ const MessageType = {
   RESPONSE_BLOCKCHAIN: 2,
 };
 
-const economy = {
+const rules = {
   BLOCK_SIZE_MAX: 1000,
   BLOCK_TIME_INTERVAL: 1000,
   TOTAL_COINS: 2100000000,
@@ -248,6 +266,48 @@ const initWallet = () => {
   log('init wallet');
 };
 
+const init = () => {
+  log('Starting peer.vote governance blockchain.');
+  log('Type \'help\' for available commmands.');
+
+  const schema = {
+    properties: {
+      name: {
+        pattern: /^[a-zA-Z\s\-]+$/,
+        message: 'Name must be only letters, spaces, or dashes',
+        required: true,
+      },
+      password: {
+        hidden: true,
+      },
+      help: {
+        type: 'string',
+      },
+    },
+  };
+
+  prompt.start();
+
+  // Get two properties from the user: username and email
+  prompt.get(schema, (err, result) => {
+    switch (result.command) {
+      case 'help':
+      default:
+        log('List of commands');
+        log('----------------');
+        log('blockchain   : displays blockchain data.');
+        log('addBlock     : adds a new block to the blockchain.');
+        log('mineBlock    : mines a given block.');
+        log('peers        : displays list of connected peers.');
+        log('addPeer      : ads a new IP to list of peers.');
+        log('walllet      : shows node coin balance.');
+        log('transaction  : broadcasts a transaction to network.');
+        break;
+    }
+  });
+};
+
+
 const initHttpServer = () => {
   const app = express();
   app.use(bodyParser.json());
@@ -280,3 +340,4 @@ const initHttpServer = () => {
 connectToPeers(initialPeers);
 initHttpServer();
 initP2PServer();
+init();

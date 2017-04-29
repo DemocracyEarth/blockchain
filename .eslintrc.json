@@ -7,6 +7,7 @@
     ],
     "rules": {
       "max-len": ["error", 250],
-      "strict": ["error", "global"]
+      "strict": 0,
+      "import/no-unresolved": [2, { "amd": true }]
     }
 }
