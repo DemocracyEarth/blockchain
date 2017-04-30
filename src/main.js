@@ -16,21 +16,21 @@
 
 'use strict';
 
+// dependencies
 const program = require('commander');
 const crypto = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 
+// app
+const log = require('./log');
+const manual = require('./manual');
+
+// environment
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const P2P_PORT = process.env.P2P_PORT || 6001;
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
-
-const log = (message, params) => {
-  let p;
-  if (!params) { p = ''; } else { p = params; }
-  console.log(message, p);
-};
 
 class Block {
   constructor(index, previousHash, timestamp, data, hash) {
@@ -332,7 +332,7 @@ const init = () => {
     .command('help [command]')
     .description('User manual on every command.')
     .option('-a, --all', 'List all commands')
-    .action(printManual);
+    .action(manual);
 
 /*  program
     .version('0.0.1')

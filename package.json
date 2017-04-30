@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "A blockchain for democratic governance.",
   "scripts": {
-    "start": "node main.js"
+    "transpile-es2015": "babel src -d lib",
+    "start": "./src/node main.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -13,19 +14,21 @@
     "ws": "^1.1.0"
   },
   "bin": {
-    "peervote": "main.js"
+    "peervote": "./src/main.js"
   },
   "engines": {
     "node": ">=4.3.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3"
   },
-  "main": "main.js",
+  "main": "./src/main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DemocracyEarth/peervote.git"
