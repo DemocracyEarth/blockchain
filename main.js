@@ -1,17 +1,11 @@
 #!/usr/bin/env node
 /**
- ______              _   _       _
-| ___ \            | | | |     | |
-| |_/ /__  ___ _ __| | | | ___ | |_ ___
-|  __/ _ \/ _ \ '__| | | |/ _ \| __/ _ \
-| | |  __/  __/ |_ \ \_/ / (_) | ||  __/
-\_|  \___|\___|_(_) \___/ \___/ \__\___|
-
 @name peer.vote
-@description A blockchain for political economies based on votes as tokens.
+@description a blockchain for political economies using votes as tokens.
 @version 0.0.1
 @author @santisiri
 @license MIT
+@copyright 2017 http://democracy.earth
 */
 
 'use strict';
@@ -21,7 +15,6 @@ const crypto = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
-const prompt = require('prompt');
 const colors = require('colors/safe');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
