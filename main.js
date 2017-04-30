@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  ______              _   _       _
 | ___ \            | | | |     | |
@@ -6,30 +7,31 @@
 | | |  __/  __/ |_ \ \_/ / (_) | ||  __/
 \_|  \___|\___|_(_) \___/ \___/ \__\___|
 
-@name PeerVote
+@name peer.vote
 @description A blockchain for political economies based on votes as tokens.
 @version 0.0.1
 @author @santisiri
-@license GPL
-@package
-
+@license MIT
 */
 
 'use strict';
 
+const program = require('commander');
 const crypto = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const prompt = require('prompt');
-const colors = require("colors/safe");
+const colors = require('colors/safe');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const P2P_PORT = process.env.P2P_PORT || 6001;
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
-const log = (message) => {
-  console.log(message);
+const log = (message, params) => {
+  let p;
+  if (!params) { p = ''; } else { p = params; }
+  console.log(message, p);
 };
 
 class Block {
@@ -266,49 +268,20 @@ const initWallet = () => {
   log('init wallet');
 };
 
-const init = () => {
-  log('Starting peer.vote governance blockchain.');
-  log('Type \'help\' for available commmands.');
-
-  const schema = {
-    properties: {
-      name: {
-        pattern: /^[a-zA-Z\s\-]+$/,
-        message: 'Name must be only letters, spaces, or dashes',
-        required: true,
-      },
-      password: {
-        hidden: true,
-      },
-      help: {
-        type: 'string',
-      },
-    },
-  };
-
-  prompt.start();
-
-  // Get two properties from the user: username and email
-  prompt.get(schema, (err, result) => {
-    switch (result.command) {
-      case 'help':
-      default:
-        log('List of commands');
-        log('----------------');
-        log('blockchain   : displays blockchain data.');
-        log('addBlock     : adds a new block to the blockchain.');
-        log('mineBlock    : mines a given block.');
-        log('peers        : displays list of connected peers.');
-        log('addPeer      : ads a new IP to list of peers.');
-        log('walllet      : shows node coin balance.');
-        log('transaction  : broadcasts a transaction to network.');
-        break;
-    }
-  });
+const printManual = () => {
+  log('List of commands');
+  log('----------------');
+  log('blockchain   : displays blockchain data.');
+  log('addBlock     : adds a new block to the blockchain.');
+  log('mineBlock    : mines a given block.');
+  log('peers        : displays list of connected peers.');
+  log('addPeer      : ads a new IP to list of peers.');
+  log('walllet      : shows node coin balance.');
+  log('transaction  : broadcasts a transaction to network.');
 };
 
-
 const initHttpServer = () => {
+  log('Initiating HTTP server.....');
   const app = express();
   app.use(bodyParser.json());
   app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain, null, 4)));
@@ -337,7 +310,31 @@ const initHttpServer = () => {
   app.listen(HTTP_PORT, () => log(`Listening http on port: ${HTTP_PORT}`));
 };
 
-connectToPeers(initialPeers);
-initHttpServer();
-initP2PServer();
+const commandLine = (argument) => {
+  switch (argument) {
+    case 'connect':
+      connectToPeers(initialPeers);
+      initHttpServer();
+      initP2PServer();
+      break;
+    case 'help':
+    default:
+      printManual();
+      break;
+  }
+};
+
+const init = () => {
+  log('peer.vote - a liquid democracy blockchain.');
+
+  program
+    .version('0.0.1')
+    .command('help [directory]')
+    .description('Help on a specific commead')
+    .option('-a, --all', 'List all commands')
+    .action(printManual);
+
+  program.parse(process.argv);
+};
+
 init();

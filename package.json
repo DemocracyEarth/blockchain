@@ -1,5 +1,5 @@
 {
-  "name": "Peer.Vote",
+  "name": "peer.vote",
   "version": "0.0.1",
   "description": "A blockchain for democratic governance.",
   "scripts": {
@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "commander": "^2.9.0",
     "crypto-js": "^3.1.6",
     "express": "~4.11.1",
     "prompt": "^1.0.0",
@@ -21,5 +22,16 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3"
-  }
+  },
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemocracyEarth/peervote.git"
+  },
+  "author": "@santisiri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DemocracyEarth/peervote/issues"
+  },
+  "homepage": "https://github.com/DemocracyEarth/peervote#readme"
 }
