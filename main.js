@@ -9,9 +9,9 @@
 @name peer.vote
 @description a blockchain for political economies using votes as tokens.
 @version 0.0.1
-@author @santisiri
+@author Democracy Earth Foundation
 @license MIT
-@copyright 2017 http://democracy.earth
+@copyright 2017
 */
 
 'use strict';
@@ -324,6 +324,8 @@ const server = (start) => {
 
 const init = () => {
   log('Peer.Vote - A liquid democracy blockchain.');
+
+  if (process.argv.length < 3) { log('Type \'peervote help [command]\' for user manual.'); }
 
   program
     .version('0.0.1')
