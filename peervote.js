@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+    ____                _    __      __
+   / __ \___  ___  ____| |  / /___  / /____
+  / /_/ / _ \/ _ \/ ___/ | / / __ \/ __/ _ \
+ / ____/  __/  __/ /   | |/ / /_/ / /_/  __/
+/_/    \___/\___/_(_)  |___/\____/\__/\___/
+
 @name peer.vote
 @description a blockchain for political economies using votes as tokens.
 @version 0.0.1
@@ -15,7 +21,6 @@ const crypto = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const WebSocket = require('ws');
-const colors = require('colors/safe');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const P2P_PORT = process.env.P2P_PORT || 6001;
@@ -262,15 +267,7 @@ const initWallet = () => {
 };
 
 const printManual = () => {
-  log('List of commands');
-  log('----------------');
-  log('blockchain   : displays blockchain data.');
-  log('addBlock     : adds a new block to the blockchain.');
-  log('mineBlock    : mines a given block.');
-  log('peers        : displays list of connected peers.');
-  log('addPeer      : ads a new IP to list of peers.');
-  log('walllet      : shows node coin balance.');
-  log('transaction  : broadcasts a transaction to network.');
+  log(program);
 };
 
 const initHttpServer = () => {
@@ -317,15 +314,30 @@ const commandLine = (argument) => {
   }
 };
 
+const server = (start) => {
+  if (start) {
+    connectToPeers(initialPeers);
+    initHttpServer();
+    initP2PServer();
+  }
+};
+
 const init = () => {
-  log('peer.vote - a liquid democracy blockchain.');
+  log('Peer.Vote - A liquid democracy blockchain.');
 
   program
     .version('0.0.1')
-    .command('help [directory]')
-    .description('Help on a specific commead')
+    .command('help [command]')
+    .description('User manual on every command.')
     .option('-a, --all', 'List all commands')
     .action(printManual);
+
+/*  program
+    .version('0.0.1')
+    .command('node [http] [peer]')
+    .description('Run blockchain node.')
+    .option('-a, --all', 'List all commands')
+    .action(server(true));*/
 
   program.parse(process.argv);
 };
