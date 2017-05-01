@@ -25,7 +25,6 @@ const WebSocket = require('ws');
 
 // app
 const log = require('./log');
-const manual = require('./manual');
 
 // environment
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
@@ -323,16 +322,23 @@ const server = (start) => {
 };
 
 const init = () => {
-  log('Peer.Vote - A liquid democracy blockchain.');
-
-  if (process.argv.length < 3) { log('Type \'peervote help [command]\' for user manual.'); }
-
-  program
+/*  program
     .version('0.0.1')
     .command('help [command]')
     .description('User manual on every command.')
     .option('-a, --all', 'List all commands')
     .action(manual);
+*/
+
+  program
+    .version('0.0.1')
+    .description('Peer.Vote - A liquid democracy blockchain.')
+    .option('-f, --foo', 'enable some foo')
+    .option('-b, --bar', 'enable some bar')
+    .option('-B, --baz', 'enable some baz')
+    .parse(process.argv);
+
+  if (!program.args.length) program.help();
 
 /*  program
     .version('0.0.1')
@@ -340,8 +346,6 @@ const init = () => {
     .description('Run blockchain node.')
     .option('-a, --all', 'List all commands')
     .action(server(true));*/
-
-  program.parse(process.argv);
 };
 
 init();
