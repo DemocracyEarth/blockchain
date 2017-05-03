@@ -265,10 +265,6 @@ const initWallet = () => {
   log('init wallet');
 };
 
-const printManual = () => {
-  log(program);
-};
-
 const initHttpServer = () => {
   log('Initiating HTTP server.....');
   const app = express();
@@ -299,20 +295,6 @@ const initHttpServer = () => {
   app.listen(HTTP_PORT, () => log(`Listening http on port: ${HTTP_PORT}`));
 };
 
-const commandLine = (argument) => {
-  switch (argument) {
-    case 'connect':
-      connectToPeers(initialPeers);
-      initHttpServer();
-      initP2PServer();
-      break;
-    case 'help':
-    default:
-      printManual();
-      break;
-  }
-};
-
 const server = (start) => {
   if (start) {
     connectToPeers(initialPeers);
@@ -322,30 +304,15 @@ const server = (start) => {
 };
 
 const init = () => {
-/*  program
-    .version('0.0.1')
-    .command('help [command]')
-    .description('User manual on every command.')
-    .option('-a, --all', 'List all commands')
-    .action(manual);
-*/
-
   program
     .version('0.0.1')
-    .description('Peer.Vote - A liquid democracy blockchain.')
-    .option('-f, --foo', 'enable some foo')
-    .option('-b, --bar', 'enable some bar')
-    .option('-B, --baz', 'enable some baz')
-    .parse(process.argv);
+    .description('Peer.Vote - A blockchain for democratic governance..')
+    .command('init [httpPort]', 'Start blockchain node server.')
+    .command('addpeer [p2pPort]', 'Connect to a peer.')
+    .command('mine [data]', 'Mine a new block.')
+    .command('blockchain', 'Show blockchain data');
 
-  if (!program.args.length) program.help();
-
-/*  program
-    .version('0.0.1')
-    .command('node [http] [peer]')
-    .description('Run blockchain node.')
-    .option('-a, --all', 'List all commands')
-    .action(server(true));*/
+  program.parse(process.argv);
 };
 
 init();
