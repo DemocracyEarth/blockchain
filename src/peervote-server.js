@@ -1,23 +1,6 @@
-#!/usr/bin/env node
-/**
-    ____                _    __      __
-   / __ \___  ___  ____| |  / /___  / /____
-  / /_/ / _ \/ _ \/ ___/ | / / __ \/ __/ _ \
- / ____/  __/  __/ /   | |/ / /_/ / /_/  __/
-/_/    \___/\___/_(_)  |___/\____/\__/\___/
-
-@name peer.vote
-@description a blockchain for political economies using votes as tokens.
-@version 0.0.1
-@author Democracy Earth Foundation
-@license MIT
-@copyright 2017
-*/
-
 'use strict';
 
 // dependencies
-const program = require('commander');
 const crypto = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -247,7 +230,7 @@ const initConnection = (ws) => {
 const initP2PServer = () => {
   const server = new WebSocket.Server({ port: P2P_PORT });
   server.on('connection', ws => initConnection(ws));
-  log(`listening websocket p2p port on: ${P2P_PORT}`);
+  log(`Listening websocket P2P port on: ${P2P_PORT}`);
 };
 
 const connectToPeers = (newPeers) => {
@@ -266,7 +249,7 @@ const initWallet = () => {
 };
 
 const initHttpServer = () => {
-  log('Initiating HTTP server.....');
+  log('Initiating HTTP server...');
   const app = express();
   app.use(bodyParser.json());
   app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain, null, 4)));
@@ -295,24 +278,10 @@ const initHttpServer = () => {
   app.listen(HTTP_PORT, () => log(`Listening http on port: ${HTTP_PORT}`));
 };
 
-const server = (start) => {
-  if (start) {
-    connectToPeers(initialPeers);
-    initHttpServer();
-    initP2PServer();
-  }
+const server = () => {
+  connectToPeers(initialPeers);
+  initHttpServer();
+  initP2PServer();
 };
 
-const init = () => {
-  program
-    .version('0.0.1')
-    .description('Peer.Vote - A blockchain for democratic governance..')
-    .command('init [httpPort]', 'Start blockchain node server.')
-    .command('addpeer [p2pPort]', 'Connect to a peer.')
-    .command('mine [data]', 'Mine a new block.')
-    .command('blockchain', 'Show blockchain data');
-
-  program.parse(process.argv);
-};
-
-init();
+server();
