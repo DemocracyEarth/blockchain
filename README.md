@@ -1,12 +1,12 @@
 <p align="center">
-<img src="http://github.com/DemocracyEarth/sovereign/public/images/democracy-earth.png" width="400" title="Democracy Earth Foundation">
+<img src="https://github.com/DemocracyEarth/vote/raw/master/images/democracy-earth.png" width="400" title="Democracy Earth Foundation">
 </p>
 
 # Peervote
 
 A delegated proof of stake block chain for votes that is resistant to coercion by preventing monopoly formation using quadratic taxing under a liquid democracy.
 
-Our goal is to create the smallest possible chain able to store the largest quantity of social political expressions. The aim is to develop it in the least amount of lines under the most widespread development language. Inspired by the [Naivechain](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54) project developed by [lhartikk](http://github.com/lhartikk), this project is meant strictly for research purposes and is not meant to be put in live production as it is right now. In a similar fashion to what Minix was for Linux, it is to be used for learning as we don't see the tech mature enough yet for resisting Nation-State actors. 
+Our goal is to create the smallest possible chain able to store the largest quantity of social political expressions. The aim is to develop it in the least amount of lines under the most widespread development language. Inspired by the [Naivechain](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54) project developed by [lhartikk](http://github.com/lhartikk), this project is meant strictly for research purposes and is not meant to be put in live production as it is right now. In a similar fashion to what Minix was for Linux, it is to be used for learning as we don't see the tech mature enough yet for resisting Nation-State actors.
 
 
 # Naivechain - a blockchain implementation in 200 lines of code
