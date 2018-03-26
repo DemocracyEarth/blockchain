@@ -2,22 +2,22 @@
 <img src="https://github.com/DemocracyEarth/vote/raw/master/images/democracy-earth.png" width="400" title="Democracy Earth Foundation">
 </p>
 
-# Peervote
+# Peer.Vote
 
-A delegated proof of stake block chain for votes that is resistant to coercion by preventing monopoly formation using quadratic taxing under a liquid democracy.
+A delegated proof of stake block chain for votes that is resistant to coercion by preventing monopoly formation using quadratic voting under a liquid democracy.
 
 Our goal is to create the smallest possible chain able to store the largest quantity of social political interactions. The aim is to develop it in the least amount of lines under the most widespread development language. Inspired by the [Naivechain](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54) project developed by [Lucas Hartikk](http://github.com/lhartikk), this project is meant strictly for research purposes and is not meant to be put in live production as it is right now. In a similar fashion to what Minix was for Linux, it is to be used for learning as we don't see the tech mature enough yet for resisting Nation-State actors.
 
 ## Rules
 
 * On-chain governance using _votes_ as tokens.
-* Transactions can only be done in quadratic quantities to prevent monopoly formation end-game.
-* Mining is airdropped to active nodes that get coopted by network verifying it is a singular human identity.
+* Transactions can only be done in quadratic quantities to prevent a monopoly as end-game.
+* Mining reward is airdropped to active nodes that get coopted by network that votes if it consists of a singular human identity.
 * Taxing is made to idle coins that are not allocated to _contracts_ (active votes) or delegated to _identities_.
 * Voting is real time (as in never ending polls) to prevent violent coercion afk.
 * A dPoS mechanism that can be implemented in smartphone-scale hardware that is energy saving & _vote_ based.
 * A logchain able to store _contracts_, _identities_ & _votes_ with the least amount of bits.
-* Implemented in a widespread language and clear code.
+* Implemented in a widespread language using best practices.
 
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
