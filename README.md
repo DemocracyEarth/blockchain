@@ -12,11 +12,11 @@ Our goal is to create the smallest possible chain able to store the largest quan
 
 * On-chain governance using _votes_ as tokens.
 * Transactions can only be done in quadratic quantities to prevent a monopoly as end-game.
-* Mining reward is airdropped to active nodes that get coopted by network that votes if it consists of a singular human identity.
-* Taxing is made to idle coins that are not allocated to _contracts_ (active votes) or delegated to _identities_.
-* Voting is real time (as in never ending polls) to prevent violent coercion afk.
+* Mining reward is airdropped to active nodes that get voted valid if it's a singular human identity.
+* Taxing is made to idle coins that are not allocated to _contracts_ or delegated to _identities_.
+* Voting is real time (never ending polls) to prevent violent coercion _afk_.
 * A dPoS mechanism that can be implemented in smartphone-scale hardware that is energy saving & _vote_ based.
-* A logchain able to store _contracts_, _identities_ & _votes_ with the least amount of bits.
+* A logchain able to store _contracts_, _identities_ & _votes_ in a compressed form.
 * Implemented in a widespread language using best practices.
 
 ### Motivation
